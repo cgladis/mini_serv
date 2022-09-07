@@ -150,6 +150,8 @@ int main(int argc, char **argv) {
 					sprintf(buff_send, "server: client %d just left\n", arr_id[fd]);
 					send_msg(fd);
 					close(fd);
+					if (arr_str[fd] != NULL)
+						free(arr_str[fd]);
 					break;
 				} else{
 					buff_read[count] = '\0';
