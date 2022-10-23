@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
 		for (int fd = 3; fd <= max_fd; ++fd) {
 			if (FD_ISSET(fd, &read_set) && fd != sockfd){
 
-				size_t count = recv(fd, buff_read, 1000, 0);
+				int count = recv(fd, buff_read, 1000, 0);
 				if (count <= 0){
 					FD_CLR(fd, &actual_set);
 					sprintf(buff_send, "server: client %d just left\n", arr_id[fd]);
@@ -157,13 +157,12 @@ int main(int argc, char **argv) {
 					buff_read[count] = '\0';
 					arr_str[fd] = str_join(arr_str[fd], buff_read);
 					message = NULL;
-
 					while (extract_message(&arr_str[fd], &message)){
 						sprintf(buff_send, "client %d: ", arr_id[fd]);
 						send_msg(fd);
+						free(message);
+						message = NULL;
 					}
-					free(message);
-					message = NULL;
 				}
 			}
 		}
